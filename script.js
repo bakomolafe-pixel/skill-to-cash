@@ -134,7 +134,7 @@ function setupReveal() {
   });
 }
 
-// ----- 6. SOCIAL PROOF POPUP -----
+// ----- 6. SOCIAL PROOF POPUP (WiserNotify-style) -----
 function setupSocialProof() {
   const popup = document.getElementById('spPopup');
   if (!popup) return;
@@ -169,6 +169,12 @@ function setupSocialProof() {
     { n: 'Halima',    c: 'Sokoto' },
     { n: 'Ifeanyi',   c: 'Onitsha' },
     { n: 'Damola',    c: 'Akure' },
+    { n: 'Funke',     c: 'Lagos' },
+    { n: 'Obinna',    c: 'Enugu' },
+    { n: 'Zainab',    c: 'Abuja' },
+    { n: 'Kunle',     c: 'Ibadan' },
+    { n: 'Amaka',     c: 'Onitsha' },
+    { n: 'Ebuka',     c: 'Owerri' },
   ];
   const messages = [
     'just got <strong>Skill to Cash</strong> ✅',
@@ -177,56 +183,80 @@ function setupSocialProof() {
     'just downloaded their copy ✅',
     'just joined Skill to Cash 🚀',
     'paid for the bundle just now 💚',
+    'just unlocked their bonuses ⚡',
   ];
   const timeAgos = [
     'just now',
     '1 minute ago',
-    '3 minutes ago',
-    '5 minutes ago',
-    '7 minutes ago',
-    '10 minutes ago',
-    '12 minutes ago',
-    '15 minutes ago',
+    '2 minutes ago',
+    '4 minutes ago',
+    '6 minutes ago',
+    '8 minutes ago',
+    '11 minutes ago',
+    '14 minutes ago',
     '18 minutes ago',
     '23 minutes ago',
     '32 minutes ago',
     '45 minutes ago',
   ];
 
-  // Shuffle copy of buyers so each load shows a different order
+  // Timing (WiserNotify-style: a fresh popup every few seconds)
+  const VISIBLE_MS = 3500;   // popup stays on screen
+  const GAP_MS     = 1500;   // gap between popups (fully off-screen)
+  const FIRST_MS   = 2000;   // first popup appears 2s after page load
+
+  // Shuffle buyers so each load shows a different order
   const shuffled = buyers.slice().sort(() => Math.random() - 0.5);
   let idx = 0;
   let dismissed = false;
   let hideTimer = null;
+  let nextTimer = null;
+
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
   function show() {
     if (dismissed) return;
     const b = shuffled[idx % shuffled.length];
-    const msg = messages[Math.floor(Math.random() * messages.length)];
-    const time = timeAgos[Math.floor(Math.random() * timeAgos.length)];
     idx++;
 
     avEl.textContent = b.n.charAt(0).toUpperCase();
     nameEl.textContent = `${b.n} from ${b.c}`;
-    timeEl.textContent = time;
-    msgEl.innerHTML = msg;
+    timeEl.textContent = pick(timeAgos);
+    msgEl.innerHTML = pick(messages);
 
+    // Slide in
     popup.classList.add('show');
+
+    // After VISIBLE_MS, slide out, then queue the next one after GAP_MS
     clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => popup.classList.remove('show'), 5000);
+    hideTimer = setTimeout(() => {
+      popup.classList.remove('show');
+      clearTimeout(nextTimer);
+      nextTimer = setTimeout(show, GAP_MS);
+    }, VISIBLE_MS);
   }
 
   closeBtn.addEventListener('click', () => {
     dismissed = true;
     popup.classList.remove('show');
     clearTimeout(hideTimer);
+    clearTimeout(nextTimer);
   });
 
-  // First popup after 6s, then every 12s
-  setTimeout(() => {
-    show();
-    setInterval(show, 12000);
-  }, 6000);
+  // Pause cycling when the tab is hidden, resume when visible
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearTimeout(hideTimer);
+      clearTimeout(nextTimer);
+      popup.classList.remove('show');
+    } else if (!dismissed) {
+      clearTimeout(nextTimer);
+      nextTimer = setTimeout(show, GAP_MS);
+    }
+  });
+
+  // First popup
+  setTimeout(show, FIRST_MS);
 }
 
 // ----- 7. Init everything when DOM is ready -----

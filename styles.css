@@ -756,6 +756,13 @@ h3 { font-size: 1.25rem; }
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   border: 2px solid var(--primary);
+  min-width: 0;
+}
+.offer-stack,
+.offer-price {
+  min-width: 0;       /* allow grid children to shrink below content size */
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 .offer-stack {
   padding: 40px 36px;
@@ -1121,7 +1128,58 @@ h3 { font-size: 1.25rem; }
   .sticker.s4 { display: none; }
   .sticker.s5 { bottom: 8%; left: -2%; }
 
-  .big-price { font-size: 3rem; }
+  /* OFFER CARD — stack items vertically so nothing gets clipped */
+  .offer-stack, .offer-price { padding: 24px 18px; }
+  .stack-list li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 11px 0;
+    font-size: 0.88rem;
+  }
+  .stack-list li span {
+    width: 100%;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .stack-list li strong {
+    font-size: 1rem;
+    color: var(--primary);
+  }
+  .stack-total {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    font-size: 0.95rem;
+    padding-top: 16px;
+  }
+  .stack-total .strike { font-size: 1.2rem; }
+
+  .price-tag { margin-bottom: 18px; }
+  .price-tag small { font-size: 0.82rem; }
+  .big-price { font-size: 2.8rem; }
+  .price-tag .save { font-size: 0.82rem; }
+
+  .btn-block {
+    padding: 14px 12px;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+  .btn-block .btn-sub { font-size: 0.7rem; }
+
+  .payment-row {
+    gap: 6px 10px;
+    font-size: 0.72rem;
+    margin-top: 12px;
+  }
+  .urgency {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    margin-top: 12px;
+  }
+  .urgency #countdown2 { white-space: nowrap; }
+
   .pain-callout { font-size: 1.05rem; padding: 26px 20px; }
   .final-cta > .container > p { font-size: 1rem; }
 
@@ -1136,19 +1194,22 @@ h3 { font-size: 1.25rem; }
 /* Tiny phones */
 @media (max-width: 380px) {
   .hero-title { font-size: 1.7rem; }
-  .big-price { font-size: 2.5rem; }
   .ebook-cover { width: 200px; }
   .ebook-title { font-size: 1.7rem; }
   .btn-lg, .btn-xl { padding: 16px 18px; font-size: 0.98rem; }
-  .stack-list li { font-size: 0.86rem; padding: 12px 0; }
-  .stack-list li strong { font-size: 0.9rem; }
-  .stack-total { font-size: 0.95rem; }
-  .stack-total .strike { font-size: 1.1rem; }
-  .btn-block { padding: 16px 12px; font-size: 0.95rem; }
-  .btn-block .btn-sub { font-size: 0.7rem; }
-  .payment-row { gap: 6px 10px; font-size: 0.72rem; }
-  .urgency { font-size: 0.78rem; }
-  .price-tag small { font-size: 0.85rem; }
+
+  .offer-stack, .offer-price { padding: 20px 14px; }
+  .stack-list li { font-size: 0.82rem; padding: 10px 0; }
+  .stack-list li strong { font-size: 0.92rem; }
+  .stack-total { font-size: 0.88rem; }
+  .stack-total .strike { font-size: 1.05rem; }
+  .big-price { font-size: 2.4rem; }
+  .price-tag small { font-size: 0.78rem; }
+  .btn-block { padding: 12px 10px; font-size: 0.88rem; }
+  .btn-block .btn-sub { font-size: 0.65rem; }
+  .payment-row { gap: 5px 8px; font-size: 0.66rem; }
+  .urgency { font-size: 0.72rem; }
+
   .announce-bar { font-size: 0.72rem; }
   .proof-logos { font-size: 0.85rem; gap: 14px; }
 }
