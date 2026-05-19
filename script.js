@@ -62,6 +62,33 @@ function setupSmoothScroll() {
   });
 }
 
+// ----- 3b. MOBILE MENU TOGGLE -----
+function setupMobileMenu() {
+  const nav = document.querySelector('.nav');
+  const toggle = document.querySelector('.nav-toggle');
+  if (!nav || !toggle) return;
+
+  const close = () => {
+    nav.classList.remove('menu-open');
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+
+  toggle.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('menu-open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  // Close menu when a nav link is tapped
+  nav.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', close);
+  });
+
+  // Close on resize back to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) close();
+  });
+}
+
 // ----- 4. STICKY CTA — Hide near top, show after hero scroll -----
 function setupStickyCTA() {
   const sticky = document.querySelector('.sticky-cta');
@@ -112,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
   startCountdown();
   setupFAQ();
   setupSmoothScroll();
+  setupMobileMenu();
   setupStickyCTA();
   setupReveal();
 });
