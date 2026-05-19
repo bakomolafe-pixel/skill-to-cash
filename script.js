@@ -134,7 +134,102 @@ function setupReveal() {
   });
 }
 
-// ----- 6. Init everything when DOM is ready -----
+// ----- 6. SOCIAL PROOF POPUP -----
+function setupSocialProof() {
+  const popup = document.getElementById('spPopup');
+  if (!popup) return;
+  const avEl = document.getElementById('spAv');
+  const nameEl = document.getElementById('spName');
+  const timeEl = document.getElementById('spTime');
+  const msgEl = document.getElementById('spMsg');
+  const closeBtn = document.getElementById('spClose');
+
+  const buyers = [
+    { n: 'Adaeze',    c: 'Lagos' },
+    { n: 'Tunde',     c: 'Ibadan' },
+    { n: 'Chinwe',    c: 'Enugu' },
+    { n: 'Emeka',     c: 'Port Harcourt' },
+    { n: 'Fatimah',   c: 'Abuja' },
+    { n: 'Seyi',      c: 'Lagos' },
+    { n: 'Blessing',  c: 'Benin City' },
+    { n: 'Kelechi',   c: 'Owerri' },
+    { n: 'Ngozi',     c: 'Onitsha' },
+    { n: 'Rotimi',    c: 'Abeokuta' },
+    { n: 'Sandra',    c: 'Jos' },
+    { n: 'Uche',      c: 'Kano' },
+    { n: 'Precious',  c: 'Warri' },
+    { n: 'Oluwaseun', c: 'Ilorin' },
+    { n: 'Aisha',     c: 'Kaduna' },
+    { n: 'Chidera',   c: 'Awka' },
+    { n: 'Ifeoma',    c: 'Asaba' },
+    { n: 'Bayo',      c: 'Lagos' },
+    { n: 'Nkechi',    c: 'Aba' },
+    { n: 'Yusuf',     c: 'Maiduguri' },
+    { n: 'Tobi',      c: 'Lagos' },
+    { n: 'Halima',    c: 'Sokoto' },
+    { n: 'Ifeanyi',   c: 'Onitsha' },
+    { n: 'Damola',    c: 'Akure' },
+  ];
+  const messages = [
+    'just got <strong>Skill to Cash</strong> ✅',
+    'just bought the bundle 🔥',
+    'just secured access at ₦5,000 💸',
+    'just downloaded their copy ✅',
+    'just joined Skill to Cash 🚀',
+    'paid for the bundle just now 💚',
+  ];
+  const timeAgos = [
+    'just now',
+    '1 minute ago',
+    '3 minutes ago',
+    '5 minutes ago',
+    '7 minutes ago',
+    '10 minutes ago',
+    '12 minutes ago',
+    '15 minutes ago',
+    '18 minutes ago',
+    '23 minutes ago',
+    '32 minutes ago',
+    '45 minutes ago',
+  ];
+
+  // Shuffle copy of buyers so each load shows a different order
+  const shuffled = buyers.slice().sort(() => Math.random() - 0.5);
+  let idx = 0;
+  let dismissed = false;
+  let hideTimer = null;
+
+  function show() {
+    if (dismissed) return;
+    const b = shuffled[idx % shuffled.length];
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+    const time = timeAgos[Math.floor(Math.random() * timeAgos.length)];
+    idx++;
+
+    avEl.textContent = b.n.charAt(0).toUpperCase();
+    nameEl.textContent = `${b.n} from ${b.c}`;
+    timeEl.textContent = time;
+    msgEl.innerHTML = msg;
+
+    popup.classList.add('show');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => popup.classList.remove('show'), 5000);
+  }
+
+  closeBtn.addEventListener('click', () => {
+    dismissed = true;
+    popup.classList.remove('show');
+    clearTimeout(hideTimer);
+  });
+
+  // First popup after 6s, then every 12s
+  setTimeout(() => {
+    show();
+    setInterval(show, 12000);
+  }, 6000);
+}
+
+// ----- 7. Init everything when DOM is ready -----
 document.addEventListener('DOMContentLoaded', () => {
   startCountdown();
   setupFAQ();
@@ -142,4 +237,5 @@ document.addEventListener('DOMContentLoaded', () => {
   setupMobileMenu();
   setupStickyCTA();
   setupReveal();
+  setupSocialProof();
 });
